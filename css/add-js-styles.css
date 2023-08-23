@@ -1,0 +1,17 @@
+.main__detail-lists-item {
+  padding: 10px;
+  padding-right: 15px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.main__detail-lists-item:not(:last-child) {
+  margin-right: 15px;
+}
+.main__detail-lists-list-name {
+  margin-bottom: 10px;
+}
+.main__detail-lists-list-list {
+  list-style: square;
+  padding-left: 30px;
+  color: var(--clr-text-darker);
+}

@@ -1,0 +1,39 @@
+/* loading */
+.loading {
+  display: block;
+  position: relative;
+  width: 75px;
+  height: 75px;
+  margin: 0 auto 60px;
+}
+.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(from 45deg, #B8B8B8, #606060);
+  border-radius: 50%;
+  animation: loading 3s linear infinite;
+}
+.loading::after {
+  content: 'Loading...';
+  position: absolute;
+  bottom: -20px;
+  left: 5px;
+  width: 100%;
+  height: 15px;
+  text-align: center;
+  animation: loading-flash 1s ease-in-out infinite;
+}
+
+@keyframes loading {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
+@keyframes loading-flash {
+  from { opacity: 1; }
+  50% { opacity: .5; }
+  to { opacity: 1; }
+}
