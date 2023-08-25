@@ -2,6 +2,8 @@ import { renderLoading } from './loading.js';
 import { renderList } from './render-list.js';
 import { renderDetailPage } from './render-detail.js';
 
+const FILMS_URL = 'https://swapi.dev/api/films';
+
 // При загрузке
 document.addEventListener('DOMContentLoaded', async () => {
   let pageUrl = window.location.href;
@@ -9,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Взять базовую информацию
   async function takeAllLists() {
-    const response = await fetch('https://swapi.dev/api/films');
+    const response = await fetch(FILMS_URL);
     const data = await response.json();
     return data;
   }

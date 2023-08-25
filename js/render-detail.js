@@ -60,8 +60,9 @@ async function renderDetailPage(title, text, additionalInfo, additionalLists) {
   mainDetail.append(textRender);
   mainDetail.append(additionalInfoList);
 
-  // Доп.списки
+  let renderAddInfoList = '';
 
+  // Доп.списки
   let additionalDiv = '';
   if (additionalLists !== null) {
     const loading = renderLoading();
@@ -99,20 +100,40 @@ async function renderDetailPage(title, text, additionalInfo, additionalLists) {
 
     // Взять ключи
     let additionalListsKeys = Object.keys(additionalLists);
+    async function fetchByUrl(url) {
+      const response = await fetch(url);
+      const data = await response.json();
+      return data;
+    }
+
+    async function fetchByUrlArray(array) {
+      let renderArrList = [];
+      let promise = await Promise.all(array.map(async (array) => {
+        let renderArr = await fetchByUrl(array);
+        return renderArr;
+      })).then(
+          (array) => {
+            for (let i = 0; i < array.length; i++) {
+              let addThis = array[i].name;
+              renderArrList.push(addThis);
+            }
+            return renderArrList;
+          });
+      return promise;
+    }
 
     // Добавить к списку
     for(let i = 0; i < additionalListsKeys.length; i++) {
       let listName = additionalListsKeys[i];
       let array = additionalLists[listName];
-      mainList.append(await renderDetailLists(listName, array));
+      let showThis = await fetchByUrlArray(array);
+      mainList.append(await renderDetailLists(listName, showThis));
     }
-    additionalDiv.append(mainList);
 
+    additionalDiv.append(mainList);
     const loadingParent = loading.parentNode;
     loadingParent.removeChild(loading);
-
   }
-
   mainDetail.append(additionalDiv);
 }
 
@@ -147,29 +168,12 @@ async function renderDetailLists(name, array) {
   let list = document.createElement('ul');
   list.classList.add('main__detail-lists-list-list');
 
-  // Ассинхронно получить данные
-  function loadData() {
-    let listPromise = new Promise(resolve => {
-      for (let i = 0; i < array.length; i++) {
-
-        let dataPromise = new Promise(resolve => {
-          let data = getByUrl(array[i]);
-          resolve(data);
-        }).then((data) => {
-          console.log(data.name);
-          let item = document.createElement('li');
-          item.classList.add('main__detail-lists-list-item');
-          item.textContent = data.name;
-          list.append(item);
-        });
-
-      }
-    }).then(() => {
-
-    })
-  }
-
-  loadData();
+  for (let i = 0; i < array.length; i++) {
+    let item = document.createElement('li');
+    item.classList.add('main__detail-lists-list-item');
+    item.textContent = array[i];
+    list.append(item);
+  };
 
   mainBlock.append(title);
   mainBlock.append(list);
